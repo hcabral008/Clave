@@ -48,21 +48,17 @@
     gap: 16px;
     margin: 0 0 28px;
     padding: 28px 32px 0;
+    width: fit-content;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
+  .brand:focus-visible { outline: 2px solid var(--brass); outline-offset: 4px; border-radius: 8px; }
   .brand h1 {
     font-family: 'Fraunces', serif;
     font-weight: 700;
     font-size: 30px;
     letter-spacing: 0.3px;
     margin: 0;
-  }
-  .brand .eyebrow {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--brass);
-    margin: 0 0 2px;
   }
   .brand-clef {
     flex-shrink: 0;
@@ -108,11 +104,6 @@
   .menu-history-group { display: flex; flex-direction: column; gap: 10px; margin-top: -32px; }
   .menu-title .brand-clef { font-size: 68px; }
   .menu-title h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 46px; margin: 0; letter-spacing: .2px; }
-  .menu-title .eyebrow {
-    margin: 0 0 4px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--brass);
-  }
 
   .menu-buttons { display: flex; flex-direction: column; gap: 16px; }
 
@@ -680,6 +671,7 @@
   .feature-chip.checked { border-color: var(--brass); background: #33301f; }
   .feature-chip.disabled { opacity: .35; cursor: not-allowed; }
   .feature-main { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .disabled-row { opacity: .45; pointer-events: none; }
   .feature-example {
     flex: 0 0 84px;
     width: 84px;
@@ -1616,6 +1608,63 @@
   @media (max-width: 640px) {
     .dict-rest-col { border-left: none; border-top: 1px solid var(--line); padding-left: 0; padding-top: 12px; flex: 1 1 100%; }
   }
+
+  /* ---- Banco de células ---- */
+  .cdb-open-btn {
+    position: fixed; top: 22px; right: 28px; z-index: 40;
+    display: none; align-items: center; gap: 8px;
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--ivory);
+    border-radius: 999px; padding: 10px 16px;
+    font: 500 14px 'IBM Plex Sans', sans-serif; cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0,0,0,.35);
+    transition: border-color .15s ease, color .15s ease, transform .12s ease;
+  }
+  body.on-book-view .cdb-open-btn { display: flex; }
+  .cdb-open-btn svg { width: 18px; height: 18px; }
+  .cdb-open-btn:hover { border-color: var(--brass-dim); color: var(--brass); transform: translateY(-1px); }
+  .modal-panel.cdb-panel { width: 1000px; max-width: 96vw; }
+  .cdb-sub { font-size: 12.5px; color: var(--muted); margin: 3px 0 0; }
+  .cdb-filters { padding: 16px 28px 14px; border-bottom: 1px solid var(--line); flex-shrink: 0; display: grid; gap: 10px; }
+  .cdb-frow { display: flex; align-items: baseline; gap: 12px; }
+  .cdb-flabel { flex: 0 0 96px; font-size: 11px; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); }
+  .cdb-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cdb-chip {
+    --accent: var(--brass);
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: 5px 12px; cursor: pointer;
+    font: 500 12.5px 'IBM Plex Sans', sans-serif; transition: all .12s ease;
+  }
+  .cdb-chip:hover { border-color: var(--accent); color: var(--ivory); }
+  .cdb-chip.on { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--panel-2)); }
+  .cdb-fbar { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; color: var(--muted); }
+  .cdb-clear { background: none; border: none; color: var(--brass); cursor: pointer; font: 500 12.5px 'IBM Plex Sans', sans-serif; }
+  .cdb-clear:hover { text-decoration: underline; }
+  .cdb-group { --accent: var(--brass); display: flex; align-items: baseline; gap: 10px; margin: 22px 0 10px; font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; }
+  .cdb-group:first-child { margin-top: 0; }
+  .cdb-group::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); align-self: center; }
+  .cdb-group small { font: 400 12px 'IBM Plex Sans', sans-serif; color: var(--muted); }
+  .cdb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .cdb-card { --accent: var(--brass); background: var(--panel-2); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 9px; }
+  .cdb-notation { background: var(--paper); border-radius: 8px; padding: 6px 8px; min-height: 96px; display: flex; align-items: center; }
+  .cdb-notation svg { display: block; width: 100%; height: auto; }
+  .cdb-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .cdb-name { font: 600 14px 'IBM Plex Mono', monospace; color: var(--ivory); }
+  .cdb-play { width: 30px; height: 30px; border-radius: 50%; background: var(--panel); border: 1px solid var(--line); color: var(--ivory); cursor: pointer; font-size: 11px; flex-shrink: 0; }
+  .cdb-play:hover { border-color: var(--brass); color: var(--brass); }
+  .cdb-facts { font-size: 11.5px; color: var(--muted); }
+  .cdb-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .cdb-tag { font-size: 10.5px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  .cdb-diff { display: flex; align-items: center; gap: 8px; font: 500 10.5px 'IBM Plex Mono', monospace; color: var(--muted); }
+  .cdb-diff i { flex: 1; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+  .cdb-diff i b { display: block; height: 100%; background: var(--accent); }
+  .cdb-empty { text-align: center; color: var(--muted); padding: 60px 0; }
+  @media (max-width: 640px) {
+    .cdb-open-btn { top: 14px; right: 14px; padding: 10px; }
+    .cdb-open-btn span { display: none; }
+    .cdb-frow { flex-direction: column; gap: 6px; }
+    .cdb-flabel { flex: none; }
+    .cdb-filters, .modal-panel.cdb-panel .modal-body { padding-left: 18px; padding-right: 18px; }
+  }
 </style>
 </head>
 <body class="intro-lock on-book-view">
@@ -1630,10 +1679,14 @@
 
 <div id="app">
 
-  <div class="brand">
+  <button class="cdb-open-btn" id="cdb-open-btn" title="Ver o banco de células" aria-label="Banco de células">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.3"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.3"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.3"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.3"/></svg>
+    <span>Banco de células</span>
+  </button>
+
+  <div class="brand" id="brand-home" role="button" tabindex="0" title="Voltar ao menu" aria-label="A Clave — voltar ao menu">
     <span class="brand-clef">𝄞</span>
     <div>
-      <p class="eyebrow">Ritmo · Leitura · Educação musical</p>
       <h1>A Clave</h1>
     </div>
   </div>
@@ -1645,7 +1698,6 @@
         <div class="menu-title">
           <span class="brand-clef">𝄞</span>
           <div>
-            <p class="eyebrow">Ritmo · Leitura · Educação musical</p>
             <h1>A Clave</h1>
           </div>
         </div>
@@ -1951,6 +2003,26 @@
           <p class="title-hint" style="margin-top:8px;">Você monta o ritmo peça por peça, direto na pauta — se tiver melodia, a altura de cada nota é preenchida sozinha, você só escolhe a forma rítmica.</p>
         </div>
 
+        <div class="field" id="metronome-hold-field">
+          <label class="title" id="metronome-hold-title">Metrônomo</label>
+          <div class="feature-main" style="gap:10px;">
+            <input type="checkbox" id="metronome-hold-checkbox" checked>
+            <span id="metronome-hold-desc" style="text-transform:none; letter-spacing:0; font-family:'IBM Plex Sans', sans-serif; font-size:13px; color:var(--muted);">Manter o metrônomo tocando durante o exercício.</span>
+          </div>
+        </div>
+
+        <div class="field" id="metronome-subdivision-field">
+          <label class="title">Subdivisão no compasso 6/8</label>
+          <div class="feature-main" style="gap:10px;">
+            <input type="checkbox" id="metronome-subdivide-countin-checkbox" checked>
+            <span style="text-transform:none; letter-spacing:0; font-family:'IBM Plex Sans', sans-serif; font-size:13px; color:var(--muted);">Na contagem: tocar as 6 colcheias só antes de começar.</span>
+          </div>
+          <div class="feature-main" id="metronome-subdivide-activity-row" style="gap:10px; margin-top:10px;">
+            <input type="checkbox" id="metronome-subdivide-activity-checkbox" checked>
+            <span style="text-transform:none; letter-spacing:0; font-family:'IBM Plex Sans', sans-serif; font-size:13px; color:var(--muted);">Na atividade: continuar tocando as 6 colcheias depois da contagem (precisa do metrônomo ligado).</span>
+          </div>
+        </div>
+
         <div class="field" id="sens-field" style="display:none;">
           <label class="title">Sensibilidade do microfone</label>
           <div class="sens-row">
@@ -2252,6 +2324,26 @@
 
 </div>
 
+<!-- BANCO DE CÉLULAS -->
+<div class="modal-overlay hidden" id="cdb-overlay">
+  <div class="modal-panel cdb-panel" role="dialog" aria-modal="true" aria-labelledby="cdb-title">
+    <div class="modal-header">
+      <div>
+        <h2 id="cdb-title">Banco de células</h2>
+        <p class="cdb-sub">As células rítmicas que o gerador usa nos exercícios. 2/4, 3/4 e 4/4 compartilham as mesmas células.</p>
+      </div>
+      <button class="modal-close-btn" id="cdb-close-btn" aria-label="Fechar">✕</button>
+    </div>
+    <div class="cdb-filters">
+      <div class="cdb-frow"><span class="cdb-flabel">Compasso</span><div class="cdb-chips" id="cdb-f-meter"></div></div>
+      <div class="cdb-frow"><span class="cdb-flabel">Nível</span><div class="cdb-chips" id="cdb-f-level"></div></div>
+      <div class="cdb-frow"><span class="cdb-flabel">Característica</span><div class="cdb-chips" id="cdb-f-tag"></div></div>
+      <div class="cdb-fbar"><span id="cdb-count"></span><button class="cdb-clear" id="cdb-clear-btn">Limpar filtros</button></div>
+    </div>
+    <div class="modal-body" id="cdb-list"></div>
+  </div>
+</div>
+
 <script>
 (function(){
   "use strict";
@@ -2296,10 +2388,10 @@
     { id:'syncLS',  beats:2, difficulty:3,   tags:['syncopation-dotted'],         notes:[DOT(N('qd',18)),N('8',6)] },
     { id:'syncSL',  beats:2, difficulty:3,   tags:['syncopation-dotted'],         notes:[N('8',6),DOT(N('qd',18))] },
     { id:'offbeat', beats:2, difficulty:3,   tags:['syncopation-offbeat'],        notes:[N('8',6),N('q',12),N('8',6)] },
-    { id:'tieLS',     beats:2, difficulty:4, tags:['syncopation-tie'],            notes:[TIE(N('8',6)),N('q',12),N('8',6)] },
+    { id:'tieLS',     beats:2, difficulty:4, tags:['syncopation-tie'],            notes:[TIE(N('q',12)),N('8',6),N('8',6)] },
     { id:'tieRestLS', beats:2, difficulty:4, tags:['syncopation-tie','silence'],  notes:[R('8r',6),TIE(N('8',6)),N('q',12)] },
     { id:'tieSL',       beats:2, difficulty:4,   tags:['syncopation-tie'],           notes:[N('8',6),TIE(N('8',6)),N('q',12)] },
-    { id:'tieLong',     beats:2, difficulty:3.5, tags:['syncopation-tie'],           notes:[TIE(N('8',6)),DOT(N('qd',18))] },
+    { id:'tieLong',     beats:2, difficulty:3.5, tags:['syncopation-tie'],           notes:[N('8',6),TIE(N('8',6)),N('8',6),N('8',6)] },
     { id:'tieRestMid',  beats:2, difficulty:4.5, tags:['syncopation-tie','silence'], notes:[R('8r',6),TIE(N('8',6)),N('8',6),N('8',6)] },
   ];
 
@@ -2316,14 +2408,14 @@
     { id:'taaaaaa', beats:2, difficulty:1.5, tags:['long-note'],         notes:[DOT(N('hd',36))] },
     { id:'cSyncA', beats:2, difficulty:3.5, tags:['syncopation-dotted'], notes:[N('8',6),DOT(N('qd',18)),N('8',6),N('8',6)] },
     { id:'cSyncB', beats:2, difficulty:4,   tags:['syncopation-dotted'], notes:[N('8',6),N('8',6),DOT(N('qd',18)),N('8',6)] },
-    { id:'cOffbeat', beats:2, difficulty:4, tags:['syncopation-offbeat'], notes:[N('8',6),N('h',24),N('8',6)] },
-    { id:'cTieA', beats:2, difficulty:4.5, tags:['syncopation-tie'],           notes:[TIE(N('8',6)),DOT(N('qd',18)),N('8',6),N('8',6)] },
-    { id:'cTieB', beats:2, difficulty:4.5, tags:['syncopation-tie','silence'], notes:[R('8r',6),TIE(N('8',6)),N('q',12),N('8',6),N('8',6)] },
+    { id:'cOffbeat', beats:2, difficulty:4, tags:['syncopation-offbeat'], notes:[N('8',6),N('q',12),N('q',12),N('8',6)] },
+    { id:'cTieA', beats:2, difficulty:4.5, tags:['syncopation-tie'],           notes:[TIE(DOT(N('qd',18))),N('8',6),N('8',6),N('8',6)] },
+    { id:'cTieB', beats:2, difficulty:4.5, tags:['syncopation-tie','silence'], notes:[R('8r',6),N('8',6),TIE(N('8',6)),N('8',6),N('8',6),N('8',6)] },
   ];
 
   const LONG_NOTE_TICKS = 12;
 
-  const TOLERANCE_TICKS = 2;
+  const TOLERANCE_TICKS = 2.5;
   function toleranceSecFor(schedule) { return TOLERANCE_TICKS * schedule.secondsPerTick; }
 
   const FEATURE_LIST = [
@@ -2783,7 +2875,7 @@
   const MODE_LABELS = { ritmo: 'Ritmo', solfejo: 'Solfejo', ditado: 'Ditado', montar: 'Montar' };
 
   function defaultModeConfig(mode) {
-    const base = { timeSig: [4, 4], tags: LEVEL_PRESETS[1].tags.slice() };
+    const base = { timeSig: [4, 4], tags: LEVEL_PRESETS[1].tags.slice(), keepMetronome: true, subdivideCountIn: true, subdivideActivity: true };
     if (mode === 'ritmo')   return { ...base, captureMode: 'button', sensitivity: 25 };
     if (mode === 'solfejo') return { ...base, solfejoCaptureMode: 'piano', sensitivity: 25 };
     if (mode === 'ditado')  return { ...base, withMelody: false, length: 1 };
@@ -2796,7 +2888,16 @@
     try { stored = JSON.parse(localStorage.getItem(MODE_CONFIG_KEY) || '{}'); } catch (e) { stored = {}; }
     const configs = {};
     Object.keys(MODE_LABELS).forEach(m => {
-      const merged = Object.assign(defaultModeConfig(m), stored[m] || {});
+      const saved = stored[m] || {};
+      const merged = Object.assign(defaultModeConfig(m), saved);
+      // Older saves had a single "subdivideCompound" switch (count-in and
+      // activity together) — carry it over to the two new switches.
+      if (saved.subdivideCompound !== undefined) {
+        if (saved.subdivideCountIn === undefined) merged.subdivideCountIn = saved.subdivideCompound !== false;
+        if (saved.subdivideActivity === undefined) merged.subdivideActivity = saved.subdivideCompound !== false;
+      }
+      delete merged.subdivideCompound;
+      delete merged.singleAccentSubdivision;
       if (!Array.isArray(merged.timeSig) || merged.timeSig.length !== 2) merged.timeSig = [4, 4];
       if (!Array.isArray(merged.tags)) merged.tags = LEVEL_PRESETS[1].tags.slice();
       // Voice capture is temporarily disabled (mic detection isn't reliable
@@ -2820,6 +2921,9 @@
     const cfg = state.modeConfigs[mode];
     cfg.timeSig = state.timeSig.slice();
     cfg.tags = Array.from(state.activeTags);
+    cfg.keepMetronome = state.keepMetronome;
+    cfg.subdivideCountIn = state.subdivideCountIn;
+    cfg.subdivideActivity = state.subdivideActivity;
     if (mode === 'ritmo') { cfg.captureMode = state.mode; cfg.sensitivity = state.sensitivity; }
     else if (mode === 'solfejo') { cfg.solfejoCaptureMode = state.solfejoCaptureMode; cfg.sensitivity = state.sensitivity; }
     else if (mode === 'ditado') { cfg.withMelody = state.ditadoWithMelody; cfg.length = state.ditadoLength; }
@@ -2860,6 +2964,9 @@
     mode: modeConfigs.ritmo.captureMode,
     bpm: LEVEL_PRESETS[1].bpm,
     sensitivity: modeConfigs.ritmo.sensitivity,
+    keepMetronome: modeConfigs.ritmo.keepMetronome,
+    subdivideCountIn: modeConfigs.ritmo.subdivideCountIn,
+    subdivideActivity: modeConfigs.ritmo.subdivideActivity,
     modeConfigs,
     exercise: null,
     schedule: null,
@@ -2916,6 +3023,7 @@
       btn.classList.add('selected');
       renderFeatureChips();
       updateSetupRecap();
+      updateSubdivisionFieldVisibility();
       syncCurrentModeConfig();
     });
     timesigRow.appendChild(btn);
@@ -2992,6 +3100,20 @@
     document.getElementById('sens-field').style.display = needsMic ? 'block' : 'none';
   }
 
+  // The 6/8 subdivision options are always shown in the settings, even
+  // while another time signature is selected (they're saved per mode and
+  // kick in whenever 6/8 is used). Two independent choices: subdivide
+  // during the count-in only, and/or keep subdividing during the activity
+  // itself. The second one only has an audible effect while the metronome
+  // is kept on, so it's disabled (not just hidden) when the metronome
+  // checkbox is off.
+  function updateSubdivisionFieldVisibility() {
+    const activityCheckbox = document.getElementById('metronome-subdivide-activity-checkbox');
+    if (activityCheckbox) activityCheckbox.disabled = !state.keepMetronome;
+    const activityRow = document.getElementById('metronome-subdivide-activity-row');
+    if (activityRow) activityRow.classList.toggle('disabled-row', !state.keepMetronome);
+  }
+
   document.querySelectorAll('#mode-row .toggle-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('#mode-row .toggle-btn').forEach(b => b.classList.remove('selected'));
@@ -3044,6 +3166,22 @@
     syncCurrentModeConfig();
   });
 
+  document.getElementById('metronome-hold-checkbox').addEventListener('change', e => {
+    state.keepMetronome = e.target.checked;
+    updateSubdivisionFieldVisibility();
+    syncCurrentModeConfig();
+  });
+
+  document.getElementById('metronome-subdivide-countin-checkbox').addEventListener('change', e => {
+    state.subdivideCountIn = e.target.checked;
+    syncCurrentModeConfig();
+  });
+
+  document.getElementById('metronome-subdivide-activity-checkbox').addEventListener('change', e => {
+    state.subdivideActivity = e.target.checked;
+    syncCurrentModeConfig();
+  });
+
   // ---------------------------------------------------------------
   // Settings modal (gear button) — shows the settings that belong to
   // whichever mode tab is currently selected, and keeps every field
@@ -3053,6 +3191,22 @@
     const cfg = state.modeConfigs[mode];
     state.timeSig = cfg.timeSig.slice();
     state.activeTags = new Set(cfg.tags);
+    state.keepMetronome = cfg.keepMetronome !== false;
+    const metronomeCheckbox = document.getElementById('metronome-hold-checkbox');
+    if (metronomeCheckbox) metronomeCheckbox.checked = state.keepMetronome;
+    const metronomeDesc = document.getElementById('metronome-hold-desc');
+    if (metronomeDesc) {
+      metronomeDesc.textContent = (mode === 'ditado' || mode === 'montar')
+        ? 'Manter o metrônomo tocando durante a reprodução da música.'
+        : 'Manter o metrônomo tocando durante o exercício.';
+    }
+    state.subdivideCountIn = cfg.subdivideCountIn !== false;
+    state.subdivideActivity = cfg.subdivideActivity !== false;
+    const subdivideCountInCheckbox = document.getElementById('metronome-subdivide-countin-checkbox');
+    if (subdivideCountInCheckbox) subdivideCountInCheckbox.checked = state.subdivideCountIn;
+    const subdivideActivityCheckbox = document.getElementById('metronome-subdivide-activity-checkbox');
+    if (subdivideActivityCheckbox) subdivideActivityCheckbox.checked = state.subdivideActivity;
+    updateSubdivisionFieldVisibility();
 
     document.querySelectorAll('#timesig-row .timesig-btn').forEach((b, i) => {
       const ts = TIME_SIGS[i];
@@ -3184,6 +3338,26 @@
     document.getElementById('menu-left').classList.remove('hidden-left');
     document.getElementById('menu-scene').classList.remove('leaving');
     showMenuPreview('default');
+  });
+
+  // Clicking the logo (header shown on every screen but the menu) drops
+  // whatever is going on — exercise, playback, mic — and returns to the menu.
+  function goToMenu() {
+    stopAllScheduledAudio();
+    state.running = false;
+    if (state.rafId) cancelAnimationFrame(state.rafId);
+    state.buttonHeld = false;
+    stopMic();
+    document.querySelectorAll('.beat-pulse, .listening-pulse').forEach(el => el.classList.remove('active'));
+    showView('view-book');
+    document.getElementById('menu-left').classList.remove('hidden-left');
+    document.getElementById('menu-scene').classList.remove('leaving');
+    showMenuPreview('default');
+  }
+  const brandHome = document.getElementById('brand-home');
+  brandHome.addEventListener('click', goToMenu);
+  brandHome.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goToMenu(); }
   });
 
   document.getElementById('start-btn').addEventListener('click', () => {
@@ -3438,7 +3612,13 @@
         for (let c = 0; c < boundaries.length - 1; c++) {
           const slice = staveNotes.slice(boundaries[c], boundaries[c + 1]);
           const hasBeamable = slice.some(n => !n.isRest() && (n.getDuration() === '8' || n.getDuration() === '16'));
-          if (hasBeamable) beams.push(...VF.Beam.generateBeams(slice, { stem_direction: VF.Stem.UP }));
+          if (hasBeamable) {
+            // Agrupa por tempo: 3 colcheias no 6/8 e a tercina inteira ficam ligadas
+            // (o padrão do VexFlow é 2 colcheias, o que deixava a 3ª solta).
+            const isTup = !!(tupletFlags && tupletFlags[c]);
+            const grp = (isTup || (den === 8 && num % 3 === 0)) ? new VF.Fraction(3, 8) : new VF.Fraction(2, 8);
+            beams.push(...VF.Beam.generateBeams(slice, { stem_direction: VF.Stem.UP, groups: [grp] }));
+          }
           if (tupletFlags && tupletFlags[c]) tuplets.push(new VF.Tuplet(slice));
         }
 
@@ -3515,10 +3695,35 @@
   function buildSchedule(exercise, bpm) {
     const secondsPerTick = 5 / bpm;
     const [num, den] = exercise.timeSig;
-    let countInClicks, ticksPerClick;
-    if (den === 8) { countInClicks = num / 3; ticksPerClick = 18; }
-    else { countInClicks = num; ticksPerClick = 12; }
-    const countInTicks = countInClicks * ticksPerClick;
+    // Count-in and activity metronome are configured separately.
+    // In 6/8 a subdivided click is one per eighth note (6 ticks) with the
+    // accent always on the first of each group of three: forte, fraco,
+    // fraco, forte, fraco, fraco. Not subdivided = one click per dotted
+    // quarter (18 ticks).
+    let countInClicks, countInTicksPerClick, countInAccentEvery, ticksPerClick, accentEvery;
+    if (den === 8) {
+      if (state.subdivideCountIn) {
+        countInClicks = num;
+        countInTicksPerClick = 6;
+        countInAccentEvery = 3;
+      } else {
+        countInClicks = num / 3;
+        countInTicksPerClick = 18;
+        countInAccentEvery = countInClicks;
+      }
+      if (state.subdivideActivity) {
+        ticksPerClick = 6;
+        accentEvery = 3;
+      } else {
+        ticksPerClick = 18;
+        accentEvery = num / 3;
+      }
+    } else {
+      countInClicks = num;
+      countInTicksPerClick = ticksPerClick = 12;
+      countInAccentEvery = accentEvery = countInClicks;
+    }
+    const countInTicks = countInClicks * countInTicksPerClick;
 
     const timeline = [];
     let cumulative = 0;
@@ -3556,7 +3761,7 @@
       i = endIdx;
     }
 
-    return { secondsPerTick, countInClicks, ticksPerClick, countInTicks, timeline, onsets, totalTicks };
+    return { secondsPerTick, countInClicks, countInTicksPerClick, countInAccentEvery, ticksPerClick, countInTicks, accentEvery, timeline, onsets, totalTicks };
   }
 
   // ---------------------------------------------------------------
@@ -3581,6 +3786,23 @@
       const idx = state.scheduledNodes.indexOf(osc);
       if (idx !== -1) state.scheduledNodes.splice(idx, 1);
     });
+  }
+
+  // Schedules the count-in clicks and (if kept on) the metronome for the
+  // activity itself, each with its own subdivision setting. Returns t0,
+  // the audio-clock time when the exercise proper begins.
+  function scheduleClicks(ctx, startAt, schedule) {
+    const { secondsPerTick, countInClicks, countInTicksPerClick, countInAccentEvery, countInTicks, ticksPerClick, accentEvery, totalTicks } = schedule;
+    for (let i = 0; i < countInClicks; i++) {
+      playClick(ctx, startAt + i * countInTicksPerClick * secondsPerTick, i % countInAccentEvery === 0);
+    }
+    const t0 = startAt + countInTicks * secondsPerTick;
+    if (state.keepMetronome) {
+      for (let k = 0; k * ticksPerClick <= totalTicks; k++) {
+        playClick(ctx, t0 + k * ticksPerClick * secondsPerTick, k % accentEvery === 0);
+      }
+    }
+    return t0;
   }
 
   function playTone(ctx, startTime, endTime, freq, instrumentKey) {
@@ -3825,8 +4047,8 @@
   // ---------------------------------------------------------------
   // Live scoring
   // ---------------------------------------------------------------
-  function minHoldFractionFor(ticks) { return ticks <= 12 ? 0.45 : 0.6; }
-  const MAX_HOLD_FRACTION = 1.8;
+  function minHoldFractionFor(ticks) { return ticks <= 12 ? 0.35 : 0.5; }
+  const MAX_HOLD_FRACTION = 2.1;
 
   function classifyHold(ns) {
     if (ns.pitchOk !== true) return 'wrong-pitch';
@@ -4008,11 +4230,7 @@
     if (ctx.state === 'suspended') await ctx.resume();
 
     const startAt = ctx.currentTime + 0.3;
-    const { secondsPerTick, countInClicks, ticksPerClick, countInTicks, totalTicks } = schedule;
-
-    for (let i = 0; i < countInClicks; i++) playClick(ctx, startAt + i * ticksPerClick * secondsPerTick, i === 0);
-    state.t0 = startAt + countInTicks * secondsPerTick;
-    for (let k = 0; k * ticksPerClick <= totalTicks; k++) playClick(ctx, state.t0 + k * ticksPerClick * secondsPerTick, k % countInClicks === 0);
+    state.t0 = scheduleClicks(ctx, startAt, schedule);
 
     document.getElementById('exercise-status').textContent = 'Contagem de entrada…';
     startBtn.disabled = false;
@@ -4222,13 +4440,16 @@
 
     const duringRestTaps = misplacedTaps.filter(m => m.duringRest);
     const betweenNotesTaps = misplacedTaps.filter(m => !m.duringRest);
-    const misplacedPenalty = duringRestTaps.length * 3 + betweenNotesTaps.length * 2;
+    const misplacedPenalty = duringRestTaps.length * 2 + betweenNotesTaps.length * 1.5;
     const accuracy = Math.max(0, Math.min(100, Math.round(f1 * 100) - misplacedPenalty));
 
     const hitCount = noteResults.filter(r => r.status === 'hit').length;
     const badHoldCount = noteResults.filter(r => r.status === 'short' || r.status === 'long').length;
     const wrongPitchCount = noteResults.filter(r => r.status === 'wrong-pitch').length;
-    const devs = noteResults.filter(r => r.deviationMs !== null).map(r => r.deviationMs);
+    // Só considera, para os alertas de tendência de tempo, as notas que NÃO
+    // saíram verdes (acerto) — se a nota já saiu certa, ela não deve gerar
+    // nenhum alerta de atraso/adiantamento/variação no relatório.
+    const devs = noteResults.filter(r => r.deviationMs !== null && r.status !== 'hit').map(r => r.deviationMs);
     const avgDev = devs.length ? Math.round(devs.reduce((a,b)=>a+b,0) / devs.length) : null;
     const devStd = devs.length > 1 ? Math.round(Math.sqrt(devs.reduce((s,d) => s + (d - avgDev) ** 2, 0) / devs.length)) : null;
     const isSolfejo = state.appMode === 'solfejo';
@@ -4353,11 +4574,8 @@
       }
       const ctx = getCtx();
       if (ctx.state === 'suspended') await ctx.resume();
-      const { secondsPerTick, countInClicks, ticksPerClick, countInTicks, totalTicks } = state.schedule;
       const startAt = ctx.currentTime + 0.3;
-      for (let i = 0; i < countInClicks; i++) playClick(ctx, startAt + i * ticksPerClick * secondsPerTick, i === 0);
-      state.t0 = startAt + countInTicks * secondsPerTick;
-      for (let k = 0; k * ticksPerClick <= totalTicks; k++) playClick(ctx, state.t0 + k * ticksPerClick * secondsPerTick, k % countInClicks === 0);
+      state.t0 = scheduleClicks(ctx, startAt, state.schedule);
       state.running = true;
       runLoop();
     })();
@@ -4425,10 +4643,7 @@
     if (ctx.state === 'suspended') await ctx.resume();
 
     const startAt = ctx.currentTime + 0.3;
-    const { secondsPerTick, countInClicks, ticksPerClick, countInTicks, totalTicks } = schedule;
-    for (let i = 0; i < countInClicks; i++) playClick(ctx, startAt + i * ticksPerClick * secondsPerTick, i === 0);
-    state.t0 = startAt + countInTicks * secondsPerTick;
-    for (let k = 0; k * ticksPerClick <= totalTicks; k++) playClick(ctx, state.t0 + k * ticksPerClick * secondsPerTick, k % countInClicks === 0);
+    state.t0 = scheduleClicks(ctx, startAt, schedule);
 
     document.getElementById('solfejo-status').textContent = 'Contagem de entrada…';
     startBtn.disabled = false;
@@ -4460,11 +4675,8 @@
       }
       const ctx = getCtx();
       if (ctx.state === 'suspended') await ctx.resume();
-      const { secondsPerTick, countInClicks, ticksPerClick, countInTicks, totalTicks } = state.schedule;
       const startAt = ctx.currentTime + 0.3;
-      for (let i = 0; i < countInClicks; i++) playClick(ctx, startAt + i * ticksPerClick * secondsPerTick, i === 0);
-      state.t0 = startAt + countInTicks * secondsPerTick;
-      for (let k = 0; k * ticksPerClick <= totalTicks; k++) playClick(ctx, state.t0 + k * ticksPerClick * secondsPerTick, k % countInClicks === 0);
+      state.t0 = scheduleClicks(ctx, startAt, state.schedule);
       state.running = true;
       runLoop();
     })();
@@ -4476,9 +4688,7 @@
     const ctx = getCtx();
     if (ctx.state === 'suspended') await ctx.resume();
     const startAt = ctx.currentTime + 0.3;
-    const { secondsPerTick, countInClicks, ticksPerClick, countInTicks } = schedule;
-    for (let i = 0; i < countInClicks; i++) playClick(ctx, startAt + i * ticksPerClick * secondsPerTick, i === 0);
-    const t0 = startAt + countInTicks * secondsPerTick;
+    const t0 = scheduleClicks(ctx, startAt, schedule);
     let lastEnd = 0;
     schedule.onsets.forEach(o => {
       const note = o.pitch ? SOLFEGE_NOTES.find(n => n.vex === o.pitch) : null;
@@ -4489,7 +4699,7 @@
 
     const pulseEl = document.querySelector('.view.active .listening-pulse');
     if (pulseEl) {
-      const totalMs = (0.3 + countInTicks * secondsPerTick + lastEnd) * 1000;
+      const totalMs = (0.3 + schedule.countInTicks * schedule.secondsPerTick + lastEnd) * 1000;
       pulseEl.classList.add('active');
       clearTimeout(pulseEl._pulseTimer);
       pulseEl._pulseTimer = setTimeout(() => pulseEl.classList.remove('active'), totalMs);
@@ -5580,6 +5790,122 @@
       }, holdUntil);
     }
     beginClaveIntro();
+  })();
+
+
+  // ---------------------------------------------------------------
+  // Banco de células: todas as células do gerador (simples e composto),
+  // com filtro por compasso, nível e característica, notação desenhada
+  // com o mesmo renderScore do resto do app, e um botão pra ouvir.
+  // O "nível" de uma célula é o primeiro nível (LEVEL_PRESETS) cujas
+  // características cobrem todas as tags dela.
+  // ---------------------------------------------------------------
+  (function cellsDatabase() {
+    const overlay = document.getElementById('cdb-overlay');
+    const listEl = document.getElementById('cdb-list');
+    const BASIC = '__basic';
+    const sel = { meter: 'all', levels: new Set(), tags: new Set() };
+    const levelOf = c => Number(Object.keys(LEVEL_PRESETS).find(lv => c.tags.every(t => LEVEL_PRESETS[lv].tags.includes(t))));
+    const ALL = [
+      ...SIMPLE_CELLS.map(c => ({ ...c, family: 'simple' })),
+      ...COMPOUND_CELLS.map(c => ({ ...c, family: 'compound' })),
+    ].map(c => ({ ...c, level: levelOf(c), key: `${c.family}-${c.id}` }));
+    const MAX_DIFF = Math.max(...ALL.map(c => c.difficulty));
+    const TAG_LABEL = Object.fromEntries(FEATURE_LIST.map(f => [f.tag, f.label]));
+    const METERS = [['all', 'Todos'], ['2/4', '2/4'], ['3/4', '3/4'], ['4/4', '4/4'], ['6/8', '6/8']];
+    const cache = new Map();
+
+    const toggle = (set, v) => set.has(v) ? set.delete(v) : set.add(v);
+    const matches = c =>
+      (sel.meter === 'all' || (sel.meter === '6/8') === (c.family === 'compound')) &&
+      (sel.levels.size === 0 || sel.levels.has(c.level)) &&
+      (sel.tags.size === 0 || [...sel.tags].some(t => t === BASIC ? c.tags.length === 0 : c.tags.includes(t)));
+
+    function chips(id, items, active, click) {
+      const el = document.getElementById(id);
+      el.innerHTML = '';
+      items.forEach(([v, label, color]) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'cdb-chip' + (active(v) ? ' on' : '');
+        if (color) b.style.setProperty('--accent', color);
+        b.textContent = label;
+        b.addEventListener('click', () => { click(v); render(); });
+        el.appendChild(b);
+      });
+    }
+
+    function drawCell(c) {
+      const id = 'cdb-n-' + c.key, el = document.getElementById(id);
+      if (cache.has(c.key)) { el.innerHTML = cache.get(c.key); return; }
+      const ex = {
+        timeSig: c.family === 'compound' ? [6, 8] : [4, 4],
+        measures: [c.notes],
+        measureCellBoundaries: [[0, c.notes.length]],
+        measureCellTuplet: [[!!c.tuplet]],
+      };
+      try { renderScore(ex, id, null, { showClef: false, compact: true }); cache.set(c.key, el.innerHTML); }
+      catch (e) { el.innerHTML = ''; }
+    }
+
+    function playCell(c) {
+      const ctx = getCtx();
+      if (ctx.state === 'suspended') ctx.resume();
+      const total = c.notes.reduce((s, n) => s + n.ticks, 0);
+      const spt = (60 / DICT_REFERENCE_BPM) / (total / c.beats);
+      let t = ctx.currentTime + 0.03, i = 0;
+      while (i < c.notes.length) {
+        const n = c.notes[i];
+        let dur = n.ticks;
+        if (!n.rest) while (c.notes[i].tieToNext && c.notes[i + 1]) { i++; dur += c.notes[i].ticks; }
+        if (!n.rest) playTone(ctx, t, t + dur * spt * 0.92, 440);
+        t += dur * spt;
+        i++;
+      }
+    }
+
+    function render() {
+      chips('cdb-f-meter', METERS, v => sel.meter === v, v => { sel.meter = v; });
+      chips('cdb-f-level', Object.keys(LEVEL_PRESETS).map(l => [Number(l), `${l} · ${LEVEL_PRESETS[l].name}`, LEVEL_ACCENTS[l]]), v => sel.levels.has(v), v => toggle(sel.levels, v));
+      chips('cdb-f-tag', [[BASIC, 'Básica'], ...FEATURE_LIST.map(f => [f.tag, f.label])], v => sel.tags.has(v), v => toggle(sel.tags, v));
+
+      const shown = ALL.filter(matches);
+      document.getElementById('cdb-count').textContent = `${shown.length} de ${ALL.length} células`;
+      listEl.innerHTML = '';
+      if (!shown.length) { listEl.innerHTML = '<p class="cdb-empty">Nenhuma célula com esses filtros.</p>'; return; }
+
+      Object.keys(LEVEL_PRESETS).map(Number).forEach(lv => {
+        const group = shown.filter(c => c.level === lv).sort((a, b) => a.difficulty - b.difficulty);
+        if (!group.length) return;
+        const accent = LEVEL_ACCENTS[lv];
+        const wrap = document.createElement('div');
+        wrap.innerHTML = `<h3 class="cdb-group" style="--accent:${accent}">Nível ${lv} · ${LEVEL_PRESETS[lv].name} <small>${group.length} ${group.length === 1 ? 'célula' : 'células'}</small></h3><div class="cdb-grid"></div>`;
+        const grid = wrap.querySelector('.cdb-grid');
+        group.forEach(c => {
+          const card = document.createElement('article');
+          card.className = 'cdb-card';
+          card.style.setProperty('--accent', accent);
+          const tags = c.tags.length ? c.tags.map(t => `<span class="cdb-tag">${TAG_LABEL[t]}</span>`).join('') : '<span class="cdb-tag">Básica</span>';
+          card.innerHTML = `
+            <div class="cdb-notation" id="cdb-n-${c.key}"></div>
+            <div class="cdb-top"><div class="cdb-facts">${c.beats} ${c.beats === 1 ? 'tempo' : 'tempos'} · ${c.family === 'compound' ? '6/8 (tempo = 3 colcheias)' : '2/4 · 3/4 · 4/4'}</div><button class="cdb-play" title="Ouvir" aria-label="Ouvir célula">▶</button></div>
+            <div class="cdb-tags">${tags}</div>
+            <div class="cdb-diff"><span>dif. ${c.difficulty}</span><i><b style="width:${Math.round(c.difficulty / MAX_DIFF * 100)}%"></b></i></div>`;
+          card.querySelector('.cdb-play').addEventListener('click', () => playCell(c));
+          grid.appendChild(card);
+        });
+        listEl.appendChild(wrap);
+      });
+      shown.forEach(drawCell);
+    }
+
+    const open = () => { cache.clear(); overlay.classList.remove('hidden'); render(); listEl.scrollTop = 0; };
+    const close = () => overlay.classList.add('hidden');
+    document.getElementById('cdb-open-btn').addEventListener('click', open);
+    document.getElementById('cdb-close-btn').addEventListener('click', close);
+    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !overlay.classList.contains('hidden')) close(); });
+    document.getElementById('cdb-clear-btn').addEventListener('click', () => { sel.meter = 'all'; sel.levels.clear(); sel.tags.clear(); render(); });
   })();
 
 })();
