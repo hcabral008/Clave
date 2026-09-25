@@ -106,6 +106,13 @@
   .menu-title h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 46px; margin: 0; letter-spacing: .2px; }
 
   .menu-buttons { display: flex; flex-direction: column; gap: 16px; }
+  /* telas baixas: aperta o espaçamento para caber os 4 botões do rodapé do menu */
+  @media (max-height: 820px) {
+    .menu-left { gap: 34px; padding-top: 28px; padding-bottom: 28px; }
+    .menu-buttons { gap: 12px; }
+    .menu-history-group { margin-top: -14px; gap: 8px; }
+    .menu-history-btn { padding: 10px 18px; }
+  }
 
   /* ---- Gamification: floating flame + popover (bottom-right, away
      from the mode buttons) ---- */
@@ -1027,7 +1034,7 @@
   }
   .mode-tab.selected { border-color: var(--brass); background: #33301f; color: var(--brass); font-weight: 600; }
 
-  .setup-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+  .setup-topbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap; gap: 14px; margin-bottom: 22px; position: relative; z-index: 2; }
 
   .setup-layout { display: flex; align-items: stretch; gap: 56px; }
   .setup-main { flex: 3 1 0; min-width: 0; padding-top: 4px; }
@@ -1067,18 +1074,87 @@
   .setup-mode-label { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
   .setup-mode-icon { width: 34px; height: 34px; flex-shrink: 0; color: var(--brass); }
   .setup-mode-label h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 26px; margin: 0; }
-  .settings-gear-btn {
-    flex-shrink: 0;
-    width: 42px; height: 42px;
-    background: var(--panel-2);
+  .personalize-card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 18px 18px;
+    background: linear-gradient(135deg, #2f3844, var(--panel-2));
     border: 1px solid var(--line);
-    border-radius: 10px;
-    color: var(--ivory);
-    font-size: 17px;
+    border-radius: 14px;
     cursor: pointer;
-    transition: border-color .15s, background .15s;
+    text-align: left;
+    font-family: 'IBM Plex Sans', sans-serif;
+    transition: border-color .18s, transform .18s, box-shadow .18s;
   }
-  .settings-gear-btn:hover { border-color: var(--brass); background: #33301f; }
+  .personalize-card:hover {
+    border-color: var(--brass);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(0,0,0,.28);
+  }
+  .personalize-card:active { transform: translateY(0); }
+  .personalize-card-cover {
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    width: 140px; height: 140px;
+    color: var(--brass);
+    opacity: .08;
+    pointer-events: none;
+    transform: rotate(12deg);
+  }
+  .personalize-card-cover svg { width: 100%; height: 100%; }
+  .personalize-card-badge {
+    position: relative;
+    flex-shrink: 0;
+    width: 48px; height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(212,166,42,.12);
+    border: 1px solid rgba(212,166,42,.35);
+    border-radius: 12px;
+    color: var(--brass);
+  }
+  .personalize-card-badge svg { width: 22px; height: 22px; }
+  .personalize-card-text {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .personalize-card-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--ivory);
+  }
+  .personalize-card-sub {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .personalize-card-arrow {
+    position: relative;
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    color: var(--muted);
+    transition: transform .18s, color .18s;
+  }
+  .personalize-card:hover .personalize-card-arrow { color: var(--brass); transform: translateX(3px); }
+  @media (max-width: 560px) {
+    .personalize-card { padding: 16px 18px; gap: 13px; }
+    .personalize-card-badge { width: 40px; height: 40px; }
+    .personalize-card-badge svg { width: 19px; height: 19px; }
+    .personalize-card-title { font-size: 16.5px; }
+    .personalize-card-sub { font-size: 12px; }
+  }
 
   /* ---- Settings modal ---- */
   .modal-overlay {
@@ -1732,6 +1808,10 @@
             <span class="clef-btn-symbol" id="clef-btn-symbol">𝄞</span>
             <span>Clave: <span id="clef-btn-label">Sol</span></span>
           </button>
+          <button class="menu-history-btn" id="open-instrument-btn">
+            <span class="clef-btn-symbol" id="instrument-btn-symbol">🔊</span>
+            <span>Instrumento: <span id="instrument-btn-label">Sintetizador</span></span>
+          </button>
         </div>
       </div>
       <div class="menu-right">
@@ -1904,7 +1984,6 @@
 
       <div class="setup-topbar">
         <button class="back-link" id="book-back-btn">← Voltar</button>
-        <button class="settings-gear-btn" id="open-settings-btn" title="Ajuste fino (características, compasso avançado, etc.)" aria-label="Ajuste fino">⚙️</button>
       </div>
 
       <div class="setup-layout">
@@ -1940,6 +2019,30 @@
           <h3 id="setup-info-title">Marque o tempo</h3>
           <p id="setup-info-desc">Leia a pauta e marque cada figura rítmica no tempo certo.</p>
           <div class="setup-recap" id="setup-recap"></div>
+
+          <button class="personalize-card" id="open-settings-btn" title="Ajuste fino (características, compasso composto, etc.)">
+            <span class="personalize-card-cover" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="4" x2="5" y2="20"/><circle cx="5" cy="9" r="2.4" fill="currentColor"/>
+                <line x1="12" y1="4" x2="12" y2="20"/><circle cx="12" cy="15" r="2.4" fill="currentColor"/>
+                <line x1="19" y1="4" x2="19" y2="20"/><circle cx="19" cy="7" r="2.4" fill="currentColor"/>
+              </svg>
+            </span>
+            <span class="personalize-card-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="4" x2="5" y2="20"/><circle cx="5" cy="9" r="2.2" fill="currentColor"/>
+                <line x1="12" y1="4" x2="12" y2="20"/><circle cx="12" cy="15" r="2.2" fill="currentColor"/>
+                <line x1="19" y1="4" x2="19" y2="20"/><circle cx="19" cy="7" r="2.2" fill="currentColor"/>
+              </svg>
+            </span>
+            <span class="personalize-card-text">
+              <span class="personalize-card-title">Personalizar</span>
+              <span class="personalize-card-sub">Características, compasso composto, sensibilidade e mais</span>
+            </span>
+            <svg class="personalize-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 6l6 6-6 6"/>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
@@ -2048,6 +2151,20 @@
       </div>
       <div class="modal-body">
         <div class="clef-list" id="clef-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSTRUMENT MODAL -->
+  <div class="modal-overlay hidden" id="instrument-modal-overlay">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2>Instrumento dos sons</h2>
+        <button class="modal-close-btn" id="instrument-close-btn" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="title-hint" style="margin:0 0 12px;">Vale para as notas tocadas no Solfejo, no Ditado, no Montar e no Banco de células. Toque num instrumento para ouvir.</p>
+        <div class="clef-list" id="instrument-list"></div>
       </div>
     </div>
   </div>
@@ -2240,6 +2357,7 @@
         <button class="back-link" id="dictionary-back-btn">← Voltar</button>
       </div>
       <p class="chart-sub" style="margin-top:-8px;">As figuras rítmicas, quanto tempo cada uma vale, um exemplo sonoro pra ouvir a duração, e a pausa (silêncio) equivalente a cada uma.</p>
+      <p class="chart-sub dict-note" style="margin-top:-4px;">⚠️ Os valores em tempos abaixo (1 tempo, 1/2 tempo, etc.) valem para <b>compasso simples</b> (ex.: 4/4, onde a semínima = 1 tempo). Em compasso composto (ex.: 6/8), o tempo é a semínima pontuada, e as figuras valem frações diferentes disso.</p>
       <div class="dict-list" id="dict-list"></div>
     </div>
   </div>
@@ -2360,6 +2478,29 @@
   const DOT = (n) => ({ ...n, dotted: true });
   const TIE = (n) => ({ ...n, tieToNext: true });
 
+  // A cell's "sound signature": the sequence of (silence?, length) events
+  // actually heard, after collapsing tied notes into one longer event.
+  // Two cells can look completely different on the page — a dotted note
+  // vs. a note tied into the next one, or a plain quarter note vs. two
+  // eighths tied together — yet be indistinguishable by ear. Comparing
+  // signatures lets the Montar palette avoid ever offering two pieces
+  // that sound identical at the same time, which would just be confusing
+  // to drag between.
+  function cellSoundSignature(cell) {
+    const out = [];
+    const notes = cell.notes;
+    let i = 0;
+    while (i < notes.length) {
+      let ticks = notes[i].ticks;
+      const rest = !!notes[i].rest;
+      let j = i;
+      while (notes[j].tieToNext && j + 1 < notes.length) { j++; ticks += notes[j].ticks; }
+      out.push((rest ? 'r' : 'n') + ticks);
+      i = j + 1;
+    }
+    return out.join('-');
+  }
+
   // Rhythm cells, Pozzoli-style: every measure is assembled from
   // whole-beat "cells" so beaming/tuplets/ties can be scoped per cell
   // and never cross a beat boundary. Each cell now also carries a
@@ -2395,7 +2536,14 @@
     { id:'tieRestMid',  beats:2, difficulty:4.5, tags:['syncopation-tie','silence'], notes:[R('8r',6),TIE(N('8',6)),N('8',6),N('8',6)] },
   ];
 
+  // 6/8 = 2 tempos, cada um uma semínima pontuada (18 ticks = 3 colcheias).
+  // Regras que TODA célula abaixo respeita (conferidas por script):
+  //  - beats:1 → soma exatamente 18 ticks e nenhuma figura ultrapassa o tempo;
+  //  - beats:2 → soma 36 ticks (compasso inteiro); o limite entre o 1º e o 2º
+  //    tempo (tick 18) nunca é cruzado por uma figura solta — só por LIGADURA
+  //    (ou pela mínima pontuada, que ocupa o compasso inteiro).
   const COMPOUND_CELLS = [
+    // ---- 1 tempo: figuras básicas ----
     { id:'taaa',    beats:1, difficulty:1,   tags:[],                    notes:[DOT(N('qd',18))] },
     { id:'rest1',   beats:1, difficulty:1,   tags:['silence'],           notes:[DOT(R('qr',18))] },
     { id:'tateti',  beats:1, difficulty:2,   tags:['eighths'],           notes:[N('8',6),N('8',6),N('8',6)] },
@@ -2404,14 +2552,46 @@
     { id:'tate_r',  beats:1, difficulty:2,   tags:['eighths','silence'], notes:[N('8',6),N('8',6),R('8r',6)] },
     { id:'taate',   beats:1, difficulty:2,   tags:['eighths'],           notes:[N('q',12),N('8',6)] },
     { id:'tetaa',   beats:1, difficulty:2,   tags:['eighths'],           notes:[N('8',6),N('q',12)] },
+    // ---- 1 tempo: novas com colcheias e silêncios ----
+    { id:'qr_te',   beats:1, difficulty:2.5, tags:['eighths','silence'], notes:[R('qr',12),N('8',6)] },
+    { id:'te_qr',   beats:1, difficulty:2.5, tags:['eighths','silence'], notes:[N('8',6),R('qr',12)] },
+    { id:'r_te_r',  beats:1, difficulty:3.5, tags:['eighths','silence'], notes:[R('8r',6),N('8',6),R('8r',6)] },
+    // ---- 1 tempo: semicolcheias ----
     { id:'sixMix',  beats:1, difficulty:5,   tags:['sixteenths'],        notes:[N('16',3),N('16',3),N('8',6),N('16',3),N('16',3)] },
+    { id:'sixsix_ee', beats:1, difficulty:4,   tags:['sixteenths','eighths'], notes:[N('16',3),N('16',3),N('8',6),N('8',6)] },
+    { id:'ee_sixsix', beats:1, difficulty:4,   tags:['sixteenths','eighths'], notes:[N('8',6),N('8',6),N('16',3),N('16',3)] },
+    { id:'sixsix_q',  beats:1, difficulty:4,   tags:['sixteenths'],           notes:[N('16',3),N('16',3),N('q',12)] },
+    { id:'q_sixsix',  beats:1, difficulty:4,   tags:['sixteenths'],           notes:[N('q',12),N('16',3),N('16',3)] },
+    { id:'six4_e',    beats:1, difficulty:5,   tags:['sixteenths','eighths'], notes:[N('16',3),N('16',3),N('16',3),N('16',3),N('8',6)] },
+    { id:'e_six4',    beats:1, difficulty:5,   tags:['sixteenths','eighths'], notes:[N('8',6),N('16',3),N('16',3),N('16',3),N('16',3)] },
+    { id:'six6',      beats:1, difficulty:5.5, tags:['sixteenths'],           notes:[N('16',3),N('16',3),N('16',3),N('16',3),N('16',3),N('16',3)] },
+    { id:'six4_r',    beats:1, difficulty:4.5, tags:['sixteenths','silence'], notes:[N('16',3),N('16',3),N('16',3),N('16',3),R('8r',6)] },
+    { id:'r_six4',    beats:1, difficulty:4.5, tags:['sixteenths','silence'], notes:[R('8r',6),N('16',3),N('16',3),N('16',3),N('16',3)] },
+    { id:'dot8_16_e', beats:1, difficulty:4.5, tags:['sixteenths','eighths'], notes:[DOT(N('8d',9)),N('16',3),N('8',6)] },
+    { id:'e_dot8_16', beats:1, difficulty:4.5, tags:['sixteenths','eighths'], notes:[N('8',6),DOT(N('8d',9)),N('16',3)] },
+    // ---- 2 tempos (compasso inteiro) ----
     { id:'taaaaaa', beats:2, difficulty:1.5, tags:['long-note'],         notes:[DOT(N('hd',36))] },
-    { id:'cSyncA', beats:2, difficulty:3.5, tags:['syncopation-dotted'], notes:[N('8',6),DOT(N('qd',18)),N('8',6),N('8',6)] },
-    { id:'cSyncB', beats:2, difficulty:4,   tags:['syncopation-dotted'], notes:[N('8',6),N('8',6),DOT(N('qd',18)),N('8',6)] },
-    { id:'cOffbeat', beats:2, difficulty:4, tags:['syncopation-offbeat'], notes:[N('8',6),N('q',12),N('q',12),N('8',6)] },
+    // síncope com nota pontuada: a nota de valor pontuado que atravessa o
+    // limite dos tempos é escrita com ligadura, para o 2º tempo continuar visível
+    { id:'cSyncA', beats:2, difficulty:3.5, tags:['syncopation-dotted'], notes:[N('8',6),TIE(N('q',12)),N('8',6),N('8',6),N('8',6)] },
+    { id:'cSyncB', beats:2, difficulty:4,   tags:['syncopation-dotted'], notes:[N('8',6),N('8',6),TIE(N('8',6)),N('q',12),N('8',6)] },
+    { id:'cSyncC', beats:2, difficulty:4,   tags:['syncopation-dotted','silence'], notes:[R('8r',6),TIE(N('q',12)),N('8',6),N('8',6),N('8',6)] },
+    { id:'cSyncD', beats:2, difficulty:4.5, tags:['syncopation-dotted','silence'], notes:[N('8',6),N('8',6),TIE(N('8',6)),N('q',12),R('8r',6)] },
+    // síncope fora do tempo
+    { id:'cOffbeat',  beats:2, difficulty:4,   tags:['syncopation-offbeat'],           notes:[N('8',6),N('q',12),N('q',12),N('8',6)] },
+    { id:'cOffbeatB', beats:2, difficulty:4,   tags:['syncopation-offbeat'],           notes:[N('8',6),N('q',12),N('8',6),N('q',12)] },
+    { id:'cOffbeatC', beats:2, difficulty:4.5, tags:['syncopation-offbeat','silence'], notes:[R('8r',6),N('q',12),N('q',12),N('8',6)] },
+    // síncope com ligadura entre os dois tempos
     { id:'cTieA', beats:2, difficulty:4.5, tags:['syncopation-tie'],           notes:[TIE(DOT(N('qd',18))),N('8',6),N('8',6),N('8',6)] },
     { id:'cTieB', beats:2, difficulty:4.5, tags:['syncopation-tie','silence'], notes:[R('8r',6),N('8',6),TIE(N('8',6)),N('8',6),N('8',6),N('8',6)] },
+    { id:'cTieC', beats:2, difficulty:4,   tags:['syncopation-tie'],           notes:[N('8',6),N('8',6),TIE(N('8',6)),N('8',6),N('8',6),N('8',6)] },
+    { id:'cTieD', beats:2, difficulty:4,   tags:['syncopation-tie'],           notes:[N('q',12),TIE(N('8',6)),N('q',12),N('8',6)] },
+    { id:'cTieE', beats:2, difficulty:4.5, tags:['syncopation-tie'],           notes:[TIE(DOT(N('qd',18))),N('q',12),N('8',6)] },
+    { id:'cTieF', beats:2, difficulty:5,   tags:['syncopation-tie','silence'], notes:[N('8',6),N('8',6),TIE(N('8',6)),N('8',6),R('8r',6),N('8',6)] },
   ];
+
+  SIMPLE_CELLS.forEach(c => { c.sig = cellSoundSignature(c); });
+  COMPOUND_CELLS.forEach(c => { c.sig = cellSoundSignature(c); });
 
   const LONG_NOTE_TICKS = 12;
 
@@ -2422,9 +2602,9 @@
     { tag:'eighths',             label:'Colcheias' },
     { tag:'sixteenths',          label:'Semicolcheias' },
     { tag:'triplet',             label:'Tercinas' },
-    { tag:'syncopation-dotted',  label:'Síncope (nota pontuada)' },
+    { tag:'syncopation-dotted',  label:'Nota pontuada' },
     { tag:'syncopation-offbeat', label:'Síncope (fora do tempo)' },
-    { tag:'syncopation-tie',     label:'Síncope (ligadura)' },
+    { tag:'syncopation-tie',     label:'Nota ligada' },
     { tag:'long-note',           label:'Notas longas' },
     { tag:'silence',             label:'Silêncios' },
   ];
@@ -2451,12 +2631,26 @@
     { label:'6/8', sig:[6,8], family:'compound' },
   ];
 
+  // Pré-escolhas de cada dificuldade. Tudo o que aparece nas configurações
+  // (características, compasso, metrônomo, captura, opções de Ditado/Montar)
+  // volta a esses valores sempre que a pessoa troca de modo ou de dificuldade,
+  // ou toca em "Restaurar padrão". Para ajustar um padrão, edite aqui.
   const LEVEL_PRESETS = {
-    1: { name:'Iniciante',     perBeatTarget:1.2, bpm:70, tags:['silence','long-note'] },
-    2: { name:'Elementar',     perBeatTarget:1.7, bpm:80, tags:['silence','long-note','eighths'] },
-    3: { name:'Intermediário', perBeatTarget:2.2, bpm:90, tags:['silence','long-note','eighths','syncopation-dotted'] },
-    4: { name:'Avançado',      perBeatTarget:2.8, bpm:95, tags:['silence','long-note','eighths','syncopation-dotted','syncopation-offbeat','syncopation-tie','triplet'] },
-    5: { name:'Virtuose',      perBeatTarget:3.4, bpm:85, tags:['silence','long-note','eighths','syncopation-dotted','syncopation-offbeat','syncopation-tie','triplet','sixteenths'] },
+    1: { name:'Iniciante',     perBeatTarget:1.2, bpm:70,
+         tags:['silence','long-note'],
+         defaults:{ timeSig:[4,4], keepMetronome:true, subdivideCountIn:true, subdivideActivity:true, sensitivity:25, withMelody:false, length:1 } },
+    2: { name:'Elementar',     perBeatTarget:1.7, bpm:80,
+         tags:['silence','long-note','eighths'],
+         defaults:{ timeSig:[4,4], keepMetronome:true, subdivideCountIn:true, subdivideActivity:true, sensitivity:25, withMelody:false, length:1 } },
+    3: { name:'Intermediário', perBeatTarget:2.2, bpm:90,
+         tags:['silence','long-note','eighths','syncopation-dotted'],
+         defaults:{ timeSig:[4,4], keepMetronome:true, subdivideCountIn:true, subdivideActivity:true, sensitivity:25, withMelody:false, length:2 } },
+    4: { name:'Avançado',      perBeatTarget:2.8, bpm:95,
+         tags:['silence','long-note','eighths','syncopation-dotted','syncopation-offbeat','syncopation-tie','triplet'],
+         defaults:{ timeSig:[4,4], keepMetronome:true, subdivideCountIn:true, subdivideActivity:true, sensitivity:25, withMelody:false, length:2 } },
+    5: { name:'Virtuose',      perBeatTarget:3.4, bpm:85,
+         tags:['silence','long-note','eighths','syncopation-dotted','syncopation-offbeat','syncopation-tie','triplet','sixteenths'],
+         defaults:{ timeSig:[4,4], keepMetronome:true, subdivideCountIn:true, subdivideActivity:true, sensitivity:25, withMelody:true, length:2 } },
   };
 
   const COLORS = {
@@ -2471,11 +2665,24 @@
   // Metronome clicks stay a plain click regardless, since they're a
   // rhythmic cue, not a "note".
   // ---------------------------------------------------------------
+  // Só timbres SUSTENTADOS: o volume fica constante do começo ao fim da nota
+  // (sem decaimento e sem vibrato), para notas longas e ligaduras soarem
+  // como um som único e contínuo. Sintetizados no navegador, sem arquivos.
+  //  wave / partials : forma de onda simples OU lista de harmônicos
+  //  env             : a = ataque, r = soltura (só no fim da nota)
+  //  gain            : volume de pico
   const INSTRUMENTS = {
-    synth:  { label: 'Sintetizador', icon: '🔊', wave: 'sine',     decay: null },
+    synth:  { label: 'Sintetizador', icon: '🔊', desc: 'Som puro e limpo — o padrão.',
+              wave: 'sine', env: { a: 0.02, r: 0.06 }, gain: 0.22 },
+    flauta: { label: 'Flauta', icon: '🌬️', desc: 'Som suave e aéreo, firme do começo ao fim da nota.',
+              partials: [1, 0.12, 0.06, 0.02], env: { a: 0.05, r: 0.06 }, gain: 0.3 },
   };
   const INSTRUMENT_KEY = 'cadencia_instrument_v1';
   function loadInstrument() {
+    try {
+      const v = localStorage.getItem(INSTRUMENT_KEY);
+      if (v && INSTRUMENTS[v]) return v;
+    } catch (e) {}
     return 'synth';
   }
   function saveInstrument() {
@@ -2483,8 +2690,11 @@
     updateInstrumentBtnLabel();
   }
   function updateInstrumentBtnLabel() {
+    const inst = INSTRUMENTS[state.instrument] || INSTRUMENTS.synth;
     const el = document.getElementById('instrument-btn-label');
-    if (el) el.textContent = (INSTRUMENTS[state.instrument] || INSTRUMENTS.synth).label;
+    if (el) el.textContent = inst.label;
+    const sym = document.getElementById('instrument-btn-symbol');
+    if (sym) sym.textContent = inst.icon;
   }
 
   // ---------------------------------------------------------------
@@ -2864,54 +3074,36 @@
   }
 
   // ---------------------------------------------------------------
-  // Per-mode settings memory. Everything except difficulty level and
-  // BPM lives here (compasso, características, modo de captura,
-  // opções de ditado/montar, sensibilidade do microfone) — each of
-  // the 4 modes (ritmo/solfejo/ditado/montar) keeps its own settings,
-  // saved to localStorage, and nothing resets unless the person taps
-  // "Resetar para padrão" inside that mode's settings panel.
   // ---------------------------------------------------------------
-  const MODE_CONFIG_KEY = 'cadencia_mode_config_v1';
+  // Configurações por modo — SEM memória entre trocas. Cada modo
+  // (ritmo/solfejo/ditado/montar) começa com os padrões da dificuldade
+  // escolhida (LEVEL_PRESETS[nível]). A pessoa pode mexer nas opções à
+  // vontade, mas ao trocar de modo ou de dificuldade tudo volta ao padrão
+  // da dificuldade — nada é salvo no localStorage.
+  // ---------------------------------------------------------------
+  const MODE_CONFIG_KEY = 'cadencia_mode_config_v1'; // chave antiga, só para limpar
   const MODE_LABELS = { ritmo: 'Ritmo', solfejo: 'Solfejo', ditado: 'Ditado', montar: 'Montar' };
 
-  function defaultModeConfig(mode) {
-    const base = { timeSig: [4, 4], tags: LEVEL_PRESETS[1].tags.slice(), keepMetronome: true, subdivideCountIn: true, subdivideActivity: true };
-    if (mode === 'ritmo')   return { ...base, captureMode: 'button', sensitivity: 25 };
-    if (mode === 'solfejo') return { ...base, solfejoCaptureMode: 'piano', sensitivity: 25 };
-    if (mode === 'ditado')  return { ...base, withMelody: false, length: 1 };
-    if (mode === 'montar')  return { ...base, withMelody: false, length: 1 };
+  function defaultModeConfig(mode, level) {
+    const preset = LEVEL_PRESETS[level] || LEVEL_PRESETS[1];
+    const d = preset.defaults;
+    const base = { timeSig: d.timeSig.slice(), tags: preset.tags.slice(), keepMetronome: d.keepMetronome, subdivideCountIn: d.subdivideCountIn, subdivideActivity: d.subdivideActivity };
+    if (mode === 'ritmo')   return { ...base, captureMode: 'button', sensitivity: d.sensitivity };
+    if (mode === 'solfejo') return { ...base, solfejoCaptureMode: 'piano', sensitivity: d.sensitivity };
+    if (mode === 'ditado')  return { ...base, withMelody: d.withMelody, length: d.length };
+    if (mode === 'montar')  return { ...base, withMelody: d.withMelody, length: d.length };
     return base;
   }
 
   function loadModeConfigs() {
-    let stored = {};
-    try { stored = JSON.parse(localStorage.getItem(MODE_CONFIG_KEY) || '{}'); } catch (e) { stored = {}; }
+    try { localStorage.removeItem(MODE_CONFIG_KEY); } catch (e) {}
     const configs = {};
-    Object.keys(MODE_LABELS).forEach(m => {
-      const saved = stored[m] || {};
-      const merged = Object.assign(defaultModeConfig(m), saved);
-      // Older saves had a single "subdivideCompound" switch (count-in and
-      // activity together) — carry it over to the two new switches.
-      if (saved.subdivideCompound !== undefined) {
-        if (saved.subdivideCountIn === undefined) merged.subdivideCountIn = saved.subdivideCompound !== false;
-        if (saved.subdivideActivity === undefined) merged.subdivideActivity = saved.subdivideCompound !== false;
-      }
-      delete merged.subdivideCompound;
-      delete merged.singleAccentSubdivision;
-      if (!Array.isArray(merged.timeSig) || merged.timeSig.length !== 2) merged.timeSig = [4, 4];
-      if (!Array.isArray(merged.tags)) merged.tags = LEVEL_PRESETS[1].tags.slice();
-      // Voice capture is temporarily disabled (mic detection isn't reliable
-      // enough yet) — silently fall back to button/piano if an old saved
-      // config still points at voice, so people don't land on a locked option.
-      if (merged.captureMode === 'voice') merged.captureMode = 'button';
-      if (merged.solfejoCaptureMode === 'voice') merged.solfejoCaptureMode = 'piano';
-      configs[m] = merged;
-    });
+    Object.keys(MODE_LABELS).forEach(m => { configs[m] = defaultModeConfig(m, 1); });
     return configs;
   }
 
   function persistModeConfigs() {
-    try { localStorage.setItem(MODE_CONFIG_KEY, JSON.stringify(state.modeConfigs)); } catch (e) {}
+    // Intencionalmente vazio: as configurações não persistem entre trocas.
   }
 
   // Copies the live working values for the current mode back into its
@@ -3044,10 +3236,8 @@
       btn.classList.add('selected');
       const preset = LEVEL_PRESETS[state.level];
       state.perBeatTarget = preset.perBeatTarget;
-      state.activeTags = new Set(preset.tags);
-      renderFeatureChips();
+      resetModeToLevelDefaults(state.appMode);
       updateSetupRecap();
-      syncCurrentModeConfig();
     });
     levelRow.appendChild(btn);
   });
@@ -3187,6 +3377,22 @@
   // whichever mode tab is currently selected, and keeps every field
   // in sync with that mode's saved config.
   // ---------------------------------------------------------------
+  // Volta as configurações do modo para os padrões da dificuldade atual.
+  // Compasso, metrônomo (manter + subdivisão do 6/8) e BPM NÃO são
+  // resetados ao trocar de dificuldade/modo — só o botão "Resetar para
+  // padrão" (resetSticky = true) os devolve ao valor original.
+  function resetModeToLevelDefaults(mode, resetSticky) {
+    const cfg = defaultModeConfig(mode, state.level);
+    if (!resetSticky) {
+      cfg.timeSig = state.timeSig.slice();
+      cfg.keepMetronome = state.keepMetronome;
+      cfg.subdivideCountIn = state.subdivideCountIn;
+      cfg.subdivideActivity = state.subdivideActivity;
+    }
+    state.modeConfigs[mode] = cfg;
+    applyModeConfigToUI(mode);
+  }
+
   function applyModeConfigToUI(mode) {
     const cfg = state.modeConfigs[mode];
     state.timeSig = cfg.timeSig.slice();
@@ -3259,10 +3465,9 @@
     if (e.target.id === 'settings-modal-overlay') closeSettingsModal();
   });
   document.getElementById('settings-reset-btn').addEventListener('click', () => {
-    if (!confirm(`Restaurar as configurações padrão do modo ${MODE_LABELS[state.appMode]}? O nível e o andamento não são afetados.`)) return;
-    state.modeConfigs[state.appMode] = defaultModeConfig(state.appMode);
-    persistModeConfigs();
-    applyModeConfigToUI(state.appMode);
+    if (!confirm(`Restaurar as configurações padrão da dificuldade "${LEVEL_PRESETS[state.level].name}" no modo ${MODE_LABELS[state.appMode]}? O nível e o andamento não são afetados.`)) return;
+    resetModeToLevelDefaults(state.appMode, true);
+    updateSetupRecap();
   });
 
   const MODE_ICON_SVGS = {
@@ -3286,7 +3491,7 @@
     const iconBg = document.getElementById('setup-info-icon-bg');
     iconBg.innerHTML = MODE_ICON_SVGS[mode];
     iconBg.style.color = MODE_ACCENT[mode];
-    applyModeConfigToUI(mode);
+    resetModeToLevelDefaults(mode);
     updateSetupRecap();
     if (!document.getElementById('settings-modal-overlay').classList.contains('hidden')) {
       document.getElementById('settings-modal-title').textContent = `Configurações — ${MODE_LABELS[mode]}`;
@@ -3607,17 +3812,38 @@
 
         const boundaries = exercise.measureCellBoundaries[mIdx];
         const tupletFlags = exercise.measureCellTuplet[mIdx];
+        const measureStartTicks = [];
+        { let acc = 0; measureDurs.forEach(d => { measureStartTicks.push(acc); acc += d.ticks; }); }
         const beams = [];
         const tuplets = [];
         for (let c = 0; c < boundaries.length - 1; c++) {
           const slice = staveNotes.slice(boundaries[c], boundaries[c + 1]);
           const hasBeamable = slice.some(n => !n.isRest() && (n.getDuration() === '8' || n.getDuration() === '16'));
           if (hasBeamable) {
-            // Agrupa por tempo: 3 colcheias no 6/8 e a tercina inteira ficam ligadas
-            // (o padrão do VexFlow é 2 colcheias, o que deixava a 3ª solta).
             const isTup = !!(tupletFlags && tupletFlags[c]);
-            const grp = (isTup || (den === 8 && num % 3 === 0)) ? new VF.Fraction(3, 8) : new VF.Fraction(2, 8);
-            beams.push(...VF.Beam.generateBeams(slice, { stem_direction: VF.Stem.UP, groups: [grp] }));
+            if (den === 8 && num % 3 === 0 && !isTup) {
+              // 6/8: liga por TEMPO (18 ticks = semínima pontuada). Feito à mão
+              // porque o gerador automático do VexFlow deixava soltas as
+              // semicolcheias de células como 2 semicolcheias + semínima.
+              // Só liga figuras consecutivas (colcheias/semicolcheias, sem
+              // pausas) que estejam dentro do mesmo tempo.
+              let run = [], runBeat = -1;
+              const flush = () => { if (run.length >= 2) beams.push(new VF.Beam(run)); run = []; runBeat = -1; };
+              for (let k = boundaries[c]; k < boundaries[c + 1]; k++) {
+                const dur = staveNotes[k].getDuration();
+                const beamable = !measureDurs[k].rest && (dur === '8' || dur === '16');
+                const beat = Math.floor(measureStartTicks[k] / 18);
+                if (!beamable) { flush(); continue; }
+                if (run.length && beat !== runBeat) flush();
+                run.push(staveNotes[k]); runBeat = beat;
+              }
+              flush();
+            } else {
+              // Agrupa por tempo: a tercina inteira fica ligada
+              // (o padrão do VexFlow é 2 colcheias, o que deixava a 3ª solta).
+              const grp = isTup ? new VF.Fraction(3, 8) : new VF.Fraction(2, 8);
+              beams.push(...VF.Beam.generateBeams(slice, { stem_direction: VF.Stem.UP, groups: [grp] }));
+            }
           }
           if (tupletFlags && tupletFlags[c]) tuplets.push(new VF.Tuplet(slice));
         }
@@ -3805,44 +4031,105 @@
     return t0;
   }
 
-  function playTone(ctx, startTime, endTime, freq, instrumentKey) {
-    const inst = INSTRUMENTS[instrumentKey || state.instrument] || INSTRUMENTS.synth;
-    const dur = Math.max(0.05, endTime - startTime);
-    const attack = Math.min(0.02, dur * 0.25);
-    const release = Math.min(0.06, dur * 0.35);
+  // ---- Motor de timbres ------------------------------------------------
+  // Formas de onda por harmônicos ficam em cache por contexto de áudio.
+  const instrumentWaveCache = new WeakMap();
+  function instrumentWave(ctx, key, inst) {
+    if (!inst.partials || !ctx.createPeriodicWave) return null;
+    let byKey = instrumentWaveCache.get(ctx);
+    if (!byKey) { byKey = {}; instrumentWaveCache.set(ctx, byKey); }
+    if (!byKey[key]) {
+      const n = inst.partials.length + 1;
+      const real = new Float32Array(n), imag = new Float32Array(n);
+      inst.partials.forEach((amp, i) => { imag[i + 1] = amp; });
+      byKey[key] = ctx.createPeriodicWave(real, imag);
+    }
+    return byKey[key];
+  }
+
+  // Cria oscilador (+ filtro e vibrato, se o instrumento tiver) e devolve o
+  // nó de saída e a lista de fontes que precisam de start()/stop().
+  function makeVoice(ctx, key, inst, freq, start, filterDecayMax) {
     const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = inst.wave;
-    osc.frequency.value = freq;
-    let outNode = osc;
+    const pw = instrumentWave(ctx, key, inst);
+    if (pw) osc.setPeriodicWave(pw); else osc.type = inst.wave || 'sine';
+    const f = freq * (inst.freqMult || 1);
+    osc.frequency.value = f;
+    const sources = [osc];
+    let out = osc;
     if (inst.filter) {
       const filt = ctx.createBiquadFilter();
       filt.type = 'lowpass';
       filt.Q.value = inst.filter.q || 0.8;
-      filt.frequency.setValueAtTime(freq * inst.filter.startMult, startTime);
-      filt.frequency.exponentialRampToValueAtTime(Math.max(180, freq * inst.filter.endMult), startTime + Math.min(inst.filter.decay, dur));
+      const fd = Math.min(inst.filter.decay, filterDecayMax || inst.filter.decay);
+      filt.frequency.setValueAtTime(f * inst.filter.startMult, start);
+      filt.frequency.exponentialRampToValueAtTime(Math.max(180, f * inst.filter.endMult), start + fd);
       osc.connect(filt);
-      outNode = filt;
+      out = filt;
     }
-    gain.gain.setValueAtTime(0, startTime);
-    gain.gain.linearRampToValueAtTime(0.22, startTime + attack);
-    if (inst.decay) {
-      // Percussive instruments (piano, violão) decay towards the end of the
-      // note instead of holding a flat sustain.
-      const decayTarget = Math.max(startTime + attack + 0.05, endTime - 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.0001, decayTarget);
-    } else {
-      gain.gain.setValueAtTime(0.22, Math.max(startTime + attack, endTime - release));
-      gain.gain.linearRampToValueAtTime(0.0001, endTime);
+    if (inst.vibrato && osc.detune) {
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      lfo.frequency.value = inst.vibrato.rate;
+      lfoGain.gain.setValueAtTime(0, start);
+      lfoGain.gain.linearRampToValueAtTime(0, start + inst.vibrato.delay);
+      lfoGain.gain.linearRampToValueAtTime(inst.vibrato.depth, start + inst.vibrato.delay + 0.3);
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.detune);
+      sources.push(lfo);
     }
-    outNode.connect(gain).connect(ctx.destination);
-    osc.start(startTime);
-    osc.stop(endTime + 0.02);
-    state.scheduledNodes.push(osc);
-    osc.addEventListener('ended', () => {
-      const idx = state.scheduledNodes.indexOf(osc);
-      if (idx !== -1) state.scheduledNodes.splice(idx, 1);
+    return { out, sources };
+  }
+
+  // Envelope de volume. `end` = fim da nota (ou null quando a nota é
+  // segurada por uma tecla, sem fim conhecido). O nível nunca vai a zero
+  // absoluto nas rampas exponenciais (o WebAudio recusa).
+  function applyEnvelope(param, inst, start, end) {
+    const e = inst.env || {};
+    const peak = inst.gain || 0.22;
+    const total = end ? end - start : Infinity;
+    const a = Math.min(e.a !== undefined ? e.a : 0.02, total * 0.25);
+    const r = end ? Math.min(e.r !== undefined ? e.r : 0.06, total * 0.35) : 0;
+    const tHold = end ? Math.max(start + a, end - r) : Infinity;
+    param.setValueAtTime(0, start);
+    param.linearRampToValueAtTime(peak, start + a);
+    if (e.d && e.s !== undefined && e.s < 1) {
+      const floorLevel = Math.max(e.s, 0.0001);
+      const tDec = start + a + e.d;
+      if (tDec <= tHold) {
+        param.exponentialRampToValueAtTime(peak * floorLevel, tDec);
+        if (end) param.setValueAtTime(peak * floorLevel, tHold);
+      } else {
+        const v = peak * Math.pow(floorLevel, (tHold - start - a) / e.d);
+        param.exponentialRampToValueAtTime(Math.max(v, 0.0001), tHold);
+      }
+    } else if (end) {
+      param.setValueAtTime(peak, tHold);
+    }
+    if (end) param.linearRampToValueAtTime(0.0001, end);
+  }
+
+  function trackSources(sources) {
+    sources.forEach(src => {
+      state.scheduledNodes.push(src);
+      src.addEventListener('ended', () => {
+        const idx = state.scheduledNodes.indexOf(src);
+        if (idx !== -1) state.scheduledNodes.splice(idx, 1);
+      });
     });
+  }
+
+  function playTone(ctx, startTime, endTime, freq, instrumentKey) {
+    const key = INSTRUMENTS[instrumentKey || state.instrument] ? (instrumentKey || state.instrument) : 'synth';
+    const inst = INSTRUMENTS[key];
+    const dur = Math.max(0.05, endTime - startTime);
+    const end = startTime + dur;
+    const voice = makeVoice(ctx, key, inst, freq, startTime, dur);
+    const gain = ctx.createGain();
+    applyEnvelope(gain.gain, inst, startTime, end);
+    voice.out.connect(gain).connect(ctx.destination);
+    voice.sources.forEach(src => { src.start(startTime); src.stop(end + 0.02); });
+    trackSources(voice.sources);
   }
 
   function stopAllScheduledAudio() {
@@ -3910,42 +4197,23 @@
   function playHeldTone(freq, instrumentKey) {
     const ctx = getCtx();
     if (ctx.state === 'suspended') ctx.resume();
-    const inst = INSTRUMENTS[instrumentKey || state.instrument] || INSTRUMENTS.synth;
+    const key = INSTRUMENTS[instrumentKey || state.instrument] ? (instrumentKey || state.instrument) : 'synth';
+    const inst = INSTRUMENTS[key];
     const now = ctx.currentTime + 0.005;
-    const osc = ctx.createOscillator();
+    const voice = makeVoice(ctx, key, inst, freq, now);
     const gain = ctx.createGain();
-    osc.type = inst.wave;
-    osc.frequency.value = freq;
-    let outNode = osc;
-    if (inst.filter) {
-      const filt = ctx.createBiquadFilter();
-      filt.type = 'lowpass';
-      filt.Q.value = inst.filter.q || 0.8;
-      filt.frequency.setValueAtTime(freq * inst.filter.startMult, now);
-      filt.frequency.exponentialRampToValueAtTime(Math.max(180, freq * inst.filter.endMult), now + inst.filter.decay);
-      osc.connect(filt);
-      outNode = filt;
-    }
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.22, now + 0.02);
-    if (inst.decay) {
-      // Percussive instruments (piano, violão) decay naturally on their own,
-      // even while the key is still held down — just like the real thing.
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.02 + inst.decay);
-    }
-    outNode.connect(gain).connect(ctx.destination);
-    osc.start(now);
-    state.scheduledNodes.push(osc);
+    // Sem fim conhecido: ataque, queda até o nível de sustentação (se o
+    // instrumento decai) e fica assim até a tecla ser solta.
+    applyEnvelope(gain.gain, inst, now, null);
+    voice.out.connect(gain).connect(ctx.destination);
+    voice.sources.forEach(src => src.start(now));
+    trackSources(voice.sources);
     return () => {
       const stopAt = ctx.currentTime + 0.05;
       gain.gain.cancelScheduledValues(ctx.currentTime);
       gain.gain.setValueAtTime(Math.max(gain.gain.value, 0.0001), ctx.currentTime);
       gain.gain.linearRampToValueAtTime(0.0001, stopAt);
-      osc.stop(stopAt + 0.02);
-      osc.addEventListener('ended', () => {
-        const idx = state.scheduledNodes.indexOf(osc);
-        if (idx !== -1) state.scheduledNodes.splice(idx, 1);
-      });
+      voice.sources.forEach(src => { try { src.stop(stopAt + 0.02); } catch (e) {} });
     };
   }
 
@@ -4984,15 +5252,36 @@
     return result;
   }
 
+  // True if two different cells picked anywhere in the exercise sound
+  // exactly the same (same collapsed-tie duration sequence) despite being
+  // written differently — e.g. a dotted quarter vs. a quarter tied into
+  // an eighth. Used only by Montar: in every other mode this is a normal
+  // (harmless) coincidence, but in Montar it would mean two visually
+  // different palette pieces that are impossible to tell apart by ear.
+  function hasSoundSignatureClash(genResult) {
+    const seen = new Set();
+    for (const m of genResult.measures) {
+      for (const c of m.cells) {
+        if (seen.has(c.sig)) return true;
+        seen.add(c.sig);
+      }
+    }
+    return false;
+  }
+
   function generateMontarRound() {
     const numMeasures = state.montarLength;
     const withMelody = state.montarWithMelody;
     const family = meterFamilyOf(state.timeSig);
     const beatsPerMeasure = beatsPerMeasureOf(state.timeSig);
-    const genResult = generateExerciseCells({
-      meterFamily: family, beatsPerMeasure, numMeasures,
-      perBeatTarget: state.perBeatTarget, activeTags: state.activeTags,
-    });
+    let genResult;
+    for (let attempt = 0; attempt < 8; attempt++) {
+      genResult = generateExerciseCells({
+        meterFamily: family, beatsPerMeasure, numMeasures,
+        perBeatTarget: state.perBeatTarget, activeTags: state.activeTags,
+      });
+      if (!hasSoundSignatureClash(genResult)) break;
+    }
     const targetExercise = cellsToExercise(genResult, state.timeSig);
     if (withMelody) assignMelody(targetExercise);
 
@@ -5002,9 +5291,21 @@
     const targetCellIds = new Set();
     genResult.measures.forEach(m => m.cells.forEach(c => targetCellIds.add(c.id)));
     const paletteCells = fullPool.filter(c => targetCellIds.has(c.id));
-    const extras = shuffleArray(fullPool.filter(c => !targetCellIds.has(c.id)));
+
+    // Never offer two pieces that sound identical (e.g. a dotted note vs.
+    // the same duration written as a tie) side by side in the palette —
+    // that's confusing, not challenging. Once a sound signature is in the
+    // palette (from the target itself), no extra with that same signature
+    // is added.
+    const usedSigs = new Set(paletteCells.map(c => c.sig));
+    const extras = shuffleArray(fullPool.filter(c => !targetCellIds.has(c.id) && !usedSigs.has(c.sig)));
     const PALETTE_CAP = 10;
-    while (paletteCells.length < PALETTE_CAP && extras.length > 0) paletteCells.push(extras.pop());
+    while (paletteCells.length < PALETTE_CAP && extras.length > 0) {
+      const candidate = extras.pop();
+      if (usedSigs.has(candidate.sig)) continue;
+      paletteCells.push(candidate);
+      usedSigs.add(candidate.sig);
+    }
 
     return {
       targetExercise,
@@ -5732,6 +6033,54 @@
     if (e.target.id === 'clef-modal-overlay') document.getElementById('clef-modal-overlay').classList.add('hidden');
   });
   updateClefBtnLabel();
+
+  // ---------------------------------------------------------------
+  // Instrument picker
+  // ---------------------------------------------------------------
+  function previewInstrument(key) {
+    stopAllScheduledAudio();
+    const ctx = getCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    const t = ctx.currentTime + 0.03;
+    [261.63, 329.63, 392.0, 523.25].forEach((f, i) => playTone(ctx, t + i * 0.36, t + i * 0.36 + 0.34, f, key));
+  }
+  function renderInstrumentOptions() {
+    const holder = document.getElementById('instrument-list');
+    holder.innerHTML = '';
+    Object.keys(INSTRUMENTS).forEach(key => {
+      const inst = INSTRUMENTS[key];
+      const row = document.createElement('div');
+      row.className = 'clef-option' + (state.instrument === key ? ' selected' : '');
+      row.innerHTML = `
+        <span class="clef-symbol">${inst.icon}</span>
+        <span class="clef-text">
+          <span class="clef-name">${inst.label}</span>
+          <span class="clef-desc">${inst.desc}</span>
+        </span>
+        <span class="clef-check">${state.instrument === key ? '✓' : ''}</span>
+      `;
+      row.addEventListener('click', () => {
+        state.instrument = key;
+        saveInstrument();
+        renderInstrumentOptions();
+        previewInstrument(key);
+      });
+      holder.appendChild(row);
+    });
+  }
+  document.getElementById('open-instrument-btn').addEventListener('click', () => {
+    renderInstrumentOptions();
+    document.getElementById('instrument-modal-overlay').classList.remove('hidden');
+  });
+  function closeInstrumentModal() {
+    stopAllScheduledAudio();
+    document.getElementById('instrument-modal-overlay').classList.add('hidden');
+  }
+  document.getElementById('instrument-close-btn').addEventListener('click', closeInstrumentModal);
+  document.getElementById('instrument-modal-overlay').addEventListener('click', (e) => {
+    if (e.target.id === 'instrument-modal-overlay') closeInstrumentModal();
+  });
+  updateInstrumentBtnLabel();
 
   renderGamiStrip();
   document.getElementById('gami-fab').addEventListener('click', () => {
