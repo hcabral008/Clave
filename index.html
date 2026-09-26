@@ -3753,6 +3753,38 @@
     });
     if (current.length) rows.push(current);
 
+    // Ritmo/solfejo pedem no máximo `opts.maxRows` linhas de pauta. Se a
+    // quebra por largura acima gerou mais linhas que isso (compassos muito
+    // cheios), reparte os compassos em exatamente esse nº de linhas,
+    // minimizando a linha mais larga — melhor uma linha mais comprida
+    // (o SVG encolhe pra caber a largura do container) do que estourar o
+    // número de linhas.
+    if (opts.maxRows && rows.length > opts.maxRows && baseWidths.length > 1) {
+      const approxWidths = baseWidths.map((w, i) => w + (i === 0 ? FIRST_MEASURE_EXTRA : 20));
+      const minRowsForCap = cap => {
+        let n = 1, sum = 0;
+        for (const w of approxWidths) {
+          if (w > cap) return Infinity;
+          if (sum + w > cap) { n++; sum = w; } else { sum += w; }
+        }
+        return n;
+      };
+      let lo = Math.max(...approxWidths), hi = approxWidths.reduce((a, b) => a + b, 0);
+      while (lo < hi) {
+        const mid = Math.floor((lo + hi) / 2);
+        if (minRowsForCap(mid) <= opts.maxRows) hi = mid; else lo = mid + 1;
+      }
+      rows.length = 0;
+      current = [];
+      currentWidth = 0;
+      approxWidths.forEach((w, i) => {
+        if (current.length && currentWidth + w > lo) { rows.push(current); current = []; currentWidth = 0; }
+        current.push(i);
+        currentWidth += w;
+      });
+      if (current.length) rows.push(current);
+    }
+
     const rowWidths = rows.map(rowIdxs => {
       let w = 20;
       rowIdxs.forEach((mIdx, posInRow) => { w += baseWidths[mIdx] + (posInRow === 0 ? FIRST_MEASURE_EXTRA : 20); });
@@ -4426,7 +4458,7 @@
       const idx = Number(idxStr);
       if (state.live.restStatus[idx].violated) timelineStatuses[idx] = { color: COLORS.silence };
     });
-    renderScore(state.exercise, state.appMode === 'solfejo' ? 'solfejo-svg-holder' : 'score-svg-holder', timelineStatuses);
+    renderScore(state.exercise, state.appMode === 'solfejo' ? 'solfejo-svg-holder' : 'score-svg-holder', timelineStatuses, { maxRows: 2 });
   }
 
   function finalizeLiveScoring(nowRel) {
@@ -4488,7 +4520,7 @@
     document.getElementById('exercise-bpm-readout').textContent = `♩ = ${state.bpm}`;
     state.measureRects = null;
     state.lastScrolledMeasureIdx = -1;
-    renderScore(exercise, 'score-svg-holder', null, { onMeasureRects: (r) => { state.measureRects = r; } });
+    renderScore(exercise, 'score-svg-holder', null, { onMeasureRects: (r) => { state.measureRects = r; }, maxRows: 2 });
     document.getElementById('progress-fill').style.width = '0%';
 
     document.getElementById('capture-button-mode').style.display = state.mode === 'button' ? 'block' : 'none';
@@ -4781,28 +4813,20 @@
     const insights = [];
     if (duringRestTaps.length > 0) {
       const measures = [...new Set(duringRestTaps.map(s => s.measureIdx + 1))].join(', ');
-      insights.push({ tone: 'issue', ico: '⏸', text: `Você tocou durante um silêncio ${duringRestTaps.length}× (compasso${duringRestTaps.length > 1 ? 's' : ''} ${measures}) — silêncio também é ritmo, conte o tempo mesmo sem tocar.` });
+      insights.push({ tone: 'issue', ico: '⏸', text: `Você tocou durante um silêncio ${duringRestTaps.length}× (compasso${duringRestTaps.length > 1 ? 's' : ''} ${measures}).` });
     }
     if (betweenNotesTaps.length > 0) {
       const measures = [...new Set(betweenNotesTaps.map(s => s.measureIdx + 1))].join(', ');
-      insights.push({ tone: 'issue', ico: '✳', text: `${betweenNotesTaps.length} toque${betweenNotesTaps.length > 1 ? 's' : ''} fora do tempo de qualquer nota (compasso${betweenNotesTaps.length > 1 ? 's' : ''} ${measures}) — tente tocar só quando uma nota é esperada.` });
+      insights.push({ tone: 'issue', ico: '✳', text: `${betweenNotesTaps.length} toque${betweenNotesTaps.length > 1 ? 's' : ''} fora do tempo de qualquer nota (compasso${betweenNotesTaps.length > 1 ? 's' : ''} ${measures}).` });
     }
     if (isSolfejo && wrongPitchCount > 0) {
-      insights.push({ tone: 'issue', ico: '🎵', text: `${wrongPitchCount} nota${wrongPitchCount > 1 ? 's' : ''} saíra${wrongPitchCount > 1 ? 'm' : ''} na tecla errada — confira a altura de cada nota na pauta antes de tocar.` });
+      insights.push({ tone: 'issue', ico: '🎵', text: `${wrongPitchCount} nota${wrongPitchCount > 1 ? 's' : ''} saíra${wrongPitchCount > 1 ? 'm' : ''} na tecla errada.` });
     }
     if (badHoldCount > 0) {
-      insights.push({ tone: 'warn', ico: '⏱', text: `${badHoldCount} nota${badHoldCount > 1 ? 's' : ''} com a duração errada — segure cada nota pelo tempo certo, nem mais nem menos.` });
-    }
-    if (avgDev !== null && Math.abs(avgDev) >= 35) {
-      insights.push({
-        tone: 'warn', ico: avgDev > 0 ? '🐢' : '🐇',
-        text: avgDev > 0
-          ? `Você tende a atrasar um pouco (${avgDev}ms em média) — tente antecipar levemente o toque.`
-          : `Você tende a adiantar (${avgDev}ms em média) — espere o tempo certo antes de tocar.`,
-      });
+      insights.push({ tone: 'warn', ico: '⏱', text: `${badHoldCount} nota${badHoldCount > 1 ? 's' : ''} com a duração errada.` });
     }
     if (devStd !== null && devStd >= 70) {
-      insights.push({ tone: 'warn', ico: '📏', text: `Seu tempo varia bastante entre as notas — praticar num BPM mais baixo pode ajudar a firmar a régua.` });
+      insights.push({ tone: 'warn', ico: '📏', text: `Seu tempo varia bastante entre as notas.` });
     }
     if (insights.length === 0) {
       insights.push({ tone: 'good', ico: '✓', text: total > 0 ? 'Sem toques fora do lugar e sem erros de tempo — mandou muito bem.' : 'Exercício concluído.' });
@@ -4819,7 +4843,7 @@
       const idx = Number(idxStr);
       if (state.live.restStatus[idx].violated) timelineStatuses[idx] = { color: COLORS.silence };
     });
-    renderScore(state.exercise, 'result-score-svg-holder', timelineStatuses);
+    renderScore(state.exercise, 'result-score-svg-holder', timelineStatuses, { maxRows: 2 });
 
     showView('view-results');
   }
@@ -4831,7 +4855,7 @@
     state.voiceActive = false;
     state.voiceBelowSince = null;
     initLiveScoring();
-    renderScore(state.exercise, 'score-svg-holder');
+    renderScore(state.exercise, 'score-svg-holder', null, { maxRows: 2 });
     document.getElementById('progress-fill').style.width = '0%';
     document.getElementById('exercise-status').textContent = 'Preparando…';
     document.getElementById('exercise-status').classList.remove('live');
@@ -4901,7 +4925,7 @@
     document.getElementById('solfejo-bpm-readout').textContent = `♩ = ${state.bpm}`;
     state.measureRects = null;
     state.lastScrolledMeasureIdx = -1;
-    renderScore(exercise, 'solfejo-svg-holder', null, { onMeasureRects: (r) => { state.measureRects = r; } });
+    renderScore(exercise, 'solfejo-svg-holder', null, { onMeasureRects: (r) => { state.measureRects = r; }, maxRows: 2 });
     document.getElementById('solfejo-progress-fill').style.width = '0%';
     document.getElementById('solfejo-mic-mode').style.display = useVoice ? 'block' : 'none';
     document.getElementById('piano-hint-text').textContent = useVoice ? '(referência — o piano não conta pra pontuação agora)' : '(toque a tecla certa, no tempo certo — ou use A S D F G H J no teclado)';
@@ -4930,7 +4954,7 @@
     state.pendingVowelSampleAt = null;
     state.lastDetectedVowel = undefined;
     initLiveScoring();
-    renderScore(state.exercise, 'solfejo-svg-holder');
+    renderScore(state.exercise, 'solfejo-svg-holder', null, { maxRows: 2 });
     document.getElementById('solfejo-progress-fill').style.width = '0%';
     document.getElementById('solfejo-status').textContent = 'Preparando…';
     document.getElementById('solfejo-status').classList.remove('live');
